@@ -1,20 +1,15 @@
 import './App.css';
-import {AppBar, fade, IconButton, makeStyles, Toolbar, Typography} from "@material-ui/core";
+import './preloader.css';
+import preloaderImg from './preloader.gif';
+import {AppBar, fade, makeStyles, Toolbar, Typography} from "@material-ui/core";
 import InputBase from '@material-ui/core/InputBase';
-import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import Pokemones from "./Pokemones/Pokemones";
-import {useEffect, useState} from "react";
+import {useState} from "react";
 
-const useStyles = makeStyles((theme) => ({
+const useMaterialStylesAppBar = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
-    },
-    AppBar: {
-        backgroundColor: theme.palette.common.black
-    },
-    menuButton: {
-        marginRight: theme.spacing(2),
     },
     title: {
         flexGrow: 1,
@@ -62,59 +57,37 @@ const useStyles = makeStyles((theme) => ({
             },
         },
     },
-    preloader: {
-        width: '100vw',
-        height: '100vh',
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        backgroundColor: 'rgba(184,20,20,0.59)',
-        visibility: 'none'
-    },
 }));
 
 function App() {
-    const classes = useStyles();
+    const materialClassesAppBar = useMaterialStylesAppBar();
+
     const [search, setSearch] = useState('')
 
-
     return (
-      <>
-          {/*<div className={classes.preloader}></div>*/}
-          <div className={classes.root}>
-              <AppBar position="static" className={classes.AppBar}>
-                  <Toolbar>
-                      {/*<IconButton*/}
-                      {/*    edge="start"*/}
-                      {/*    className={classes.menuButton}*/}
-                      {/*    color="inherit"*/}
-                      {/*    aria-label="open drawer"*/}
-                      {/*>*/}
-                      {/*    <MenuIcon />*/}
-                      {/*</IconButton>*/}
-                      <Typography className={classes.title} variant="h6" noWrap>
-                          pokemonex
-                      </Typography>
-                      <div className={classes.search}>
-                          <div className={classes.searchIcon}>
-                              <SearchIcon />
-                          </div>
-                          <InputBase
-                              placeholder="Search…"
-                              classes={{
-                                  root: classes.inputRoot,
-                                  input: classes.inputInput,
-                              }}
-                              inputProps={{ 'aria-label': 'search' }}
-                              value={search}
-                              onChange={(event)=>{setSearch(event.target.value)}}
-                          />
-                      </div>
-                  </Toolbar>
-              </AppBar>
-          </div>
-          <Pokemones preloader={classes.preloader} search={search}/>
-      </>
+        <>
+            <AppBar color="primary" position="static" className={materialClassesAppBar.root}>
+                <Toolbar>
+                    <Typography variant="h6" noWrap className={materialClassesAppBar.title}>pokemonex</Typography>
+                    <div className={materialClassesAppBar.search}>
+                        <div className={materialClassesAppBar.searchIcon}>
+                            <SearchIcon />
+                        </div>
+                        <InputBase
+                            classes={{
+                                root: materialClassesAppBar.inputRoot,
+                                input: materialClassesAppBar.inputInput
+                            }}
+                            placeholder="Search…"
+                            value={search}
+                            onChange={(event)=>{setSearch(event.target.value)}}
+                        />
+                    </div>
+                </Toolbar>
+            </AppBar>
+
+            <Pokemones search={search}/>
+        </>
     );
 }
 

@@ -1,16 +1,7 @@
 import React from "react";
-import {
-    Button,
-    Card,
-    CardActionArea,
-    CardActions,
-    CardContent,
-    CardMedia, Grid,
-    makeStyles,
-    Typography
-} from "@material-ui/core";
+import {Card, CardActionArea, CardContent, CardMedia, Grid, makeStyles, Typography} from "@material-ui/core";
 
-const useStyles = makeStyles({
+const useMaterialStylesCard = makeStyles({
     root: {
         maxWidth: 345,
         width: 300
@@ -21,7 +12,7 @@ const useStyles = makeStyles({
 });
 
 function Pokemone({pkmn}) {
-    const classes = useStyles();
+    const materialClassesCard = useMaterialStylesCard();
 
     const getTypes = (pkmnName) => {
         let xmlHttp = new XMLHttpRequest()
@@ -39,10 +30,10 @@ function Pokemone({pkmn}) {
 
     return(
         <Grid item>
-            <Card className={classes.root}>
+            <Card className={materialClassesCard.root}>
                 <CardActionArea>
                     <CardMedia
-                        className={classes.media}
+                        className={materialClassesCard.media}
                         image={"https://pokeres.bastionbot.org/images/pokemon/" + pkmn.url.slice(34).slice(0,-1) + ".png"}
                         title={pkmn.name}
                     />
@@ -55,14 +46,6 @@ function Pokemone({pkmn}) {
                         </Typography>
                     </CardContent>
                 </CardActionArea>
-                <CardActions>
-                    <Button size="small" color="primary">
-                        Share
-                    </Button>
-                    <Button size="small" color="primary">
-                        Learn More
-                    </Button>
-                </CardActions>
             </Card>
         </Grid>
     );
