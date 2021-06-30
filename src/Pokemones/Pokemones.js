@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme)=>({
     }
 }));
 
-function Pokemones({search}) {
+function Pokemones({search, preloader}) {
     const classes = useStyles();
 
     const [pokemones, setPokemones] = useState([])
@@ -65,27 +65,23 @@ function Pokemones({search}) {
     }, [])
 
     if (selectedTags.length!==0) {
+
         pokemones.map((pkmn,pkmnIndx)=>{
             if (pkmnIndx in filteredPokemonesByTags) {
 
             } else {
-                console.log("Filtered by tag in: "+(pkmnIndx+1))
                 let xmlHttp = new XMLHttpRequest()
-                xmlHttp.open( "GET", 'https://pokeapi.co/api/v2/pokemon/'+(pkmnIndx+1), false )
+                xmlHttp.open( "GET", 'https://pokeapi.co/api/v2/pokemon/'+pkmn.name, false )
                 xmlHttp.send( null )
-                try {
-                    let pkmnTypes = JSON.parse(xmlHttp.responseText).types
-                    pkmnTypes.map((type, typeIndx)=>{
-                        for (let tagIndx=0; tagIndx<selectedTags.length; tagIndx++) {
-                            if (type.type.name===selectedTags[tagIndx]) {
-                                setFilteredPokemonesByTags([...filteredPokemonesByTags, pkmnIndx])
-                                break
-                            }
+                let pkmnTypes = JSON.parse(xmlHttp.responseText).types
+                pkmnTypes.map((type, typeIndx)=>{
+                    for (let tagIndx=0; tagIndx<selectedTags.length; tagIndx++) {
+                        if (type.type.name===selectedTags[tagIndx]) {
+                            setFilteredPokemonesByTags([...filteredPokemonesByTags, pkmnIndx])
+                            break
                         }
-                    })
-                } catch (error) {
-                    console.error(error)
-                }
+                    }
+                })
             }
         })
     }

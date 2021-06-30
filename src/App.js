@@ -62,6 +62,15 @@ const useStyles = makeStyles((theme) => ({
             },
         },
     },
+    preloader: {
+        width: '100vw',
+        height: '100vh',
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        backgroundColor: 'rgba(184,20,20,0.59)',
+        visibility: 'none'
+    },
 }));
 
 function App() {
@@ -71,6 +80,7 @@ function App() {
 
     return (
       <>
+          {/*<div className={classes.preloader}></div>*/}
           <div className={classes.root}>
               <AppBar position="static" className={classes.AppBar}>
                   <Toolbar>
@@ -103,7 +113,7 @@ function App() {
                   </Toolbar>
               </AppBar>
           </div>
-          <Pokemones search={search}/>
+          <Pokemones preloader={classes.preloader} search={search}/>
       </>
     );
 }
