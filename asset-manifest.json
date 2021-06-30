@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/pokemonex/static/css/main.77f0e034.chunk.css",
-    "main.js": "/pokemonex/static/js/main.69f479d8.chunk.js",
-    "main.js.map": "/pokemonex/static/js/main.69f479d8.chunk.js.map",
+    "main.js": "/pokemonex/static/js/main.065e47cb.chunk.js",
+    "main.js.map": "/pokemonex/static/js/main.065e47cb.chunk.js.map",
     "runtime-main.js": "/pokemonex/static/js/runtime-main.4df53695.js",
     "runtime-main.js.map": "/pokemonex/static/js/runtime-main.4df53695.js.map",
     "static/js/2.bfe868d4.chunk.js": "/pokemonex/static/js/2.bfe868d4.chunk.js",
@@ -18,6 +18,6 @@
     "static/js/runtime-main.4df53695.js",
     "static/js/2.bfe868d4.chunk.js",
     "static/css/main.77f0e034.chunk.css",
-    "static/js/main.69f479d8.chunk.js"
+    "static/js/main.065e47cb.chunk.js"
   ]
 }
