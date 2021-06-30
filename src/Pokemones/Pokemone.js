@@ -23,6 +23,20 @@ const useStyles = makeStyles({
 function Pokemone({pkmn}) {
     const classes = useStyles();
 
+    const getTypes = (pkmnName) => {
+        let xmlHttp = new XMLHttpRequest()
+        xmlHttp.open( "GET", 'https://pokeapi.co/api/v2/pokemon/' + pkmnName, false )
+        xmlHttp.send( null )
+
+        let pkmnTypes = JSON.parse(xmlHttp.responseText).types
+        let typesStr = ''
+        pkmnTypes.map((type, typeIndx)=>{
+            typesStr = typesStr + type.type.name + ' '
+        })
+
+        return typesStr
+    }
+
     return(
         <Grid item>
             <Card className={classes.root}>
@@ -37,7 +51,7 @@ function Pokemone({pkmn}) {
                             {pkmn.name}
                         </Typography>
                         <Typography variant="body2" color="textSecondary" component="p">
-                            Type:
+                            Type: {getTypes(pkmn.name)}
                         </Typography>
                     </CardContent>
                 </CardActionArea>
