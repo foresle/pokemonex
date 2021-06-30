@@ -14,6 +14,10 @@ function Pokemones({search}) {
     const [tags, setTags] = useState([])
     const [preloader, setPreloader] = useState('hidden-preloader')
 
+    if (localStorage.getItem('selectedTags')===null) {
+        localStorage.setItem('selectedTags', JSON.stringify([]))
+    }
+
     // Функція відповідає за стан прелоадера, приймає або 1 або 0
     const isPreloaderRun = (preloaderRun) => {
         if (preloaderRun) {
