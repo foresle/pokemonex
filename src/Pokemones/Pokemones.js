@@ -109,9 +109,7 @@ function Pokemones({search}) {
     // Формуємо список покемонів
     const formatPokemonesJSX = () => {
         if (pokemones.length===0 && JSON.parse(localStorage.getItem('selectedTags')).length!==0) {
-            return(
-                <Typography variant='h3'>Not Found</Typography>
-            )
+            return(<Box m={4}><Typography variant='h3'>Not Found</Typography></Box>)
         } else {
             return(
                 pokemones.map((pkmn, indx)=>{
@@ -198,11 +196,11 @@ function Pokemones({search}) {
             </Box>
 
             <Box m={3} id="all-tags">
-                <Box m={1}><Typography variant={'h4'}>All tags</Typography></Box>
+                <Box m={3}><Typography align="center" variant={'h4'}>All tags</Typography></Box>
                 <Grid container
                       direction="row"
-                      justify="flex-start"
-                      spacing={2}
+                      justify="center"
+                      spacing={3}
                       alignItems="flex-start">
                     {tags.map((tag,indx)=>{return(
                         <Grid item>
