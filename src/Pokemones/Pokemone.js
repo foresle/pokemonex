@@ -58,8 +58,8 @@ function Pokemone({pkmn}) {
             }
 
             return (
-                <Card className={materialClassesCard.root} onClick={()=>{setCardIsHover(!cardIsHover)}} onMouseOver={()=>{setCardIsHover(true)}} onMouseOut={()=>{setCardIsHover(false)}}>
-                    <CardActionArea>
+                <Card className={materialClassesCard.root}>
+                    <CardActionArea onClick={()=>{setCardIsHover(!cardIsHover)}}>
                         <Radar data={chartData} type="undefined"/>
                         <CardContent>
                             <Typography gutterBottom variant="h5" component="h2">
@@ -79,8 +79,8 @@ function Pokemone({pkmn}) {
             )
         } else {
             return (
-                <Card className={materialClassesCard.root} onClick={()=>{setCardIsHover(!cardIsHover)}} onMouseOver={()=>{setCardIsHover(true)}} onMouseOut={()=>{setCardIsHover(false)}}>
-                    <CardActionArea>
+                <Card className={materialClassesCard.root}>
+                    <CardActionArea onClick={()=>{setCardIsHover(!cardIsHover)}}>
                             <CardMedia
                                 className={materialClassesCard.media}
                                 image={"https://pokeres.bastionbot.org/images/pokemon/" + pokemon.id + ".png"}
