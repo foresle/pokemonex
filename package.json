@@ -1,7 +1,7 @@
 {
   "homepage": "http://foresle.github.io/pokemonex",
   "name": "pokemonex",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "dependencies": {
     "@material-ui/core": "^4.11.4",
