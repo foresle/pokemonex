@@ -1,23 +1,23 @@
 {
   "files": {
     "main.css": "/pokemonex/static/css/main.77f0e034.chunk.css",
-    "main.js": "/pokemonex/static/js/main.1304fc55.chunk.js",
-    "main.js.map": "/pokemonex/static/js/main.1304fc55.chunk.js.map",
-    "runtime-main.js": "/pokemonex/static/js/runtime-main.88b8df5f.js",
-    "runtime-main.js.map": "/pokemonex/static/js/runtime-main.88b8df5f.js.map",
-    "static/js/2.78f5590b.chunk.js": "/pokemonex/static/js/2.78f5590b.chunk.js",
-    "static/js/2.78f5590b.chunk.js.map": "/pokemonex/static/js/2.78f5590b.chunk.js.map",
-    "static/js/3.eed342c2.chunk.js": "/pokemonex/static/js/3.eed342c2.chunk.js",
-    "static/js/3.eed342c2.chunk.js.map": "/pokemonex/static/js/3.eed342c2.chunk.js.map",
+    "main.js": "/pokemonex/static/js/main.26f28fee.chunk.js",
+    "main.js.map": "/pokemonex/static/js/main.26f28fee.chunk.js.map",
+    "runtime-main.js": "/pokemonex/static/js/runtime-main.09597275.js",
+    "runtime-main.js.map": "/pokemonex/static/js/runtime-main.09597275.js.map",
+    "static/js/2.028babdb.chunk.js": "/pokemonex/static/js/2.028babdb.chunk.js",
+    "static/js/2.028babdb.chunk.js.map": "/pokemonex/static/js/2.028babdb.chunk.js.map",
+    "static/js/3.74fc4977.chunk.js": "/pokemonex/static/js/3.74fc4977.chunk.js",
+    "static/js/3.74fc4977.chunk.js.map": "/pokemonex/static/js/3.74fc4977.chunk.js.map",
     "index.html": "/pokemonex/index.html",
     "static/css/main.77f0e034.chunk.css.map": "/pokemonex/static/css/main.77f0e034.chunk.css.map",
-    "static/js/2.78f5590b.chunk.js.LICENSE.txt": "/pokemonex/static/js/2.78f5590b.chunk.js.LICENSE.txt",
+    "static/js/2.028babdb.chunk.js.LICENSE.txt": "/pokemonex/static/js/2.028babdb.chunk.js.LICENSE.txt",
     "static/media/preloader.5d2a87c1.gif": "/pokemonex/static/media/preloader.5d2a87c1.gif"
   },
   "entrypoints": [
-    "static/js/runtime-main.88b8df5f.js",
-    "static/js/2.78f5590b.chunk.js",
+    "static/js/runtime-main.09597275.js",
+    "static/js/2.028babdb.chunk.js",
     "static/css/main.77f0e034.chunk.css",
-    "static/js/main.1304fc55.chunk.js"
+    "static/js/main.26f28fee.chunk.js"
   ]
 }
