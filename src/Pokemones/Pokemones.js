@@ -180,9 +180,7 @@ function Pokemones({search}) {
                     <ButtonGroup color="secondary" aria-label="outlined secondary button group">
                         <Button onClick={()=>{setPaginationDelta(10)}}>10</Button>
                         <Button onClick={()=>{setPaginationDelta(20)}}>20</Button>
-                        <Button onClick={()=>{setPaginationDelta(30)}}>30</Button>
                         <Button onClick={()=>{setPaginationDelta(50)}}>50</Button>
-                        <Button onClick={()=>{setPaginationDelta(100)}}>100</Button>
                     </ButtonGroup>
                 </Grid>}
             </Box>
