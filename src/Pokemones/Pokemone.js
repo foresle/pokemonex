@@ -1,6 +1,16 @@
-import React, {useState} from "react";
-import {Card, CardActionArea, CardContent, CardMedia, Chip, Grid, makeStyles, Typography} from "@material-ui/core";
-import {Router, Link} from "react-router-dom";
+import React, {useEffect, useState} from "react";
+import {
+    Button,
+    Card,
+    CardActionArea,
+    CardActions,
+    CardContent,
+    CardMedia,
+    Chip,
+    Grid,
+    makeStyles,
+    Typography
+} from "@material-ui/core";
 import {Radar} from "react-chartjs-2";
 
 const useMaterialStylesCard = makeStyles({
@@ -16,6 +26,25 @@ const useMaterialStylesCard = makeStyles({
 function Pokemone({pkmn}) {
     const materialClassesCard = useMaterialStylesCard();
     const [cardIsHover, setCardIsHover] = useState(false)
+    const [favPokemon, setFavPokemon] = useState([])
+
+    const getFavoritePokemones = () => {
+        let xmlHttp = new XMLHttpRequest()
+        xmlHttp.open("GET", 'http://127.0.0.1:5000/my_favorite', false)
+        xmlHttp.setRequestHeader('Authorization', "Bearer "+JSON.parse(localStorage.getItem('accessToken')))
+        xmlHttp.send(null)
+
+        if (xmlHttp.status===200) {
+            let json = JSON.parse(xmlHttp.responseText)
+            setFavPokemon(json)
+        } else {
+            window.location.href = '/login'
+        }
+    }
+
+    useEffect(()=>{
+        getFavoritePokemones()
+    }, [])
 
     const getCard = () => {
         let xmlHttp = new XMLHttpRequest()
@@ -28,6 +57,60 @@ function Pokemone({pkmn}) {
         let pokemonTypesStr = pokemonTypes.map((type) => {
             return (<Grid item><Chip size={'small'} color={'primary'} label={type.type.name}/></Grid>)
         })
+
+        const setFavorite = async (pokemonID) => {
+            const response = await fetch('http://127.0.0.1:5000/favorite/'+pokemonID, {
+                method: 'GET',
+                headers: {
+                    'Authorization': "Bearer "+JSON.parse(localStorage.getItem('accessToken'))
+                }
+            })
+
+            if (! response.ok) {
+                window.location.href = '/login'
+            } else {
+                setFavPokemon([...favPokemon, pokemonID])
+            }
+        }
+        
+        const setUnfavored = async (pokemonID) => {
+            const response = await fetch('http://127.0.0.1:5000/unfavored/'+pokemonID, {
+                method: 'GET',
+                headers: {
+                    'Authorization': "Bearer "+JSON.parse(localStorage.getItem('accessToken'))
+                }
+            })
+
+            if (! response.ok) {
+                window.location.href = '/login'
+            } else {
+                setFavPokemon(favPokemon.map((id) => {
+                    if (id!==pokemonID) {
+                        return id
+                    }
+                }))
+            }
+        }
+
+        const cardButton = (pokemonID) => {
+            if (! favPokemon.includes(pokemonID)) {
+                return (
+                    <Button size="medium" onClick={() => {
+                        setFavorite(pokemonID)
+                    }} color="primary">
+                        Favorite
+                    </Button>
+                )
+            } else {
+                return (
+                    <Button size="medium" onClick={() => {
+                        setUnfavored(pokemonID)
+                    }} color="primary">
+                        Unfavored
+                    </Button>
+                )
+            }
+        }
 
         if (cardIsHover) {
             const chartData = {
@@ -60,7 +143,7 @@ function Pokemone({pkmn}) {
             return (
                 <Card className={materialClassesCard.root}>
                     <CardActionArea onClick={()=>{setCardIsHover(!cardIsHover)}}>
-                        <Radar data={chartData} type="undefined"/>
+                        <Radar data={chartData} type="undefined" />
                         <CardContent>
                             <Typography gutterBottom variant="h5" component="h2">
                                 {pokemon.name}
@@ -86,7 +169,7 @@ function Pokemone({pkmn}) {
                                 image={"https://pokeres.bastionbot.org/images/pokemon/" + pokemon.id + ".png"}
                                 title={pokemon.name}
                             />
-                        <CardContent>
+                        <CardContent onClick={()=>{setCardIsHover(!cardIsHover)}}>
                             <Typography gutterBottom variant="h5" component="h2">
                                 {pkmn.name}
                             </Typography>
@@ -100,6 +183,9 @@ function Pokemone({pkmn}) {
                             </Typography>
                         </CardContent>
                     </CardActionArea>
+                    <CardActions>
+                        {cardButton(pokemon.id)}
+                    </CardActions>
                 </Card>
             )
         }

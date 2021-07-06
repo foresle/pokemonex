@@ -1,10 +1,18 @@
 import './App.css';
 import './preloader.css';
-import {AppBar, fade, makeStyles, Toolbar, Typography} from "@material-ui/core";
+import {AppBar, Button, fade, makeStyles, Toolbar, Typography} from "@material-ui/core";
 import InputBase from '@material-ui/core/InputBase';
 import SearchIcon from '@material-ui/icons/Search';
 import Pokemones from "./Pokemones/Pokemones";
-import {useState} from "react";
+import {useEffect, useState} from "react";
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route,
+    Link
+} from "react-router-dom";
+import Login from "./Login";
+import Register from "./Register";
 
 const useMaterialStylesAppBar = makeStyles((theme) => ({
     root: {
@@ -65,26 +73,40 @@ function App() {
 
     return (
         <>
-            <AppBar color="primary" position="static" className={materialClassesAppBar.root}>
-                <Toolbar>
-                    <Typography variant="h6" noWrap className={materialClassesAppBar.title}>pokemonex</Typography>
-                    <div className={materialClassesAppBar.search}>
-                        <div className={materialClassesAppBar.searchIcon}>
-                            <SearchIcon />
+            <Router>
+                <AppBar color="primary" position="static" className={materialClassesAppBar.root}>
+                    <Toolbar>
+                        <Typography variant="h6" noWrap className={materialClassesAppBar.title}>pokemonex</Typography>
+                        <Button color="inherit"><Link to='/login' style={{textDecoration: 'none', color: 'white'}}>Login</Link></Button>
+                        <Button color="inherit"><Link to='/register' style={{textDecoration: 'none', color: 'white'}}>Register</Link></Button>
+                        <div className={materialClassesAppBar.search}>
+                            <div className={materialClassesAppBar.searchIcon}>
+                                <SearchIcon />
+                            </div>
+                            <InputBase
+                                classes={{
+                                    root: materialClassesAppBar.inputRoot,
+                                    input: materialClassesAppBar.inputInput
+                                }}
+                                placeholder="Search…"
+                                value={search}
+                                onChange={(event)=>{setSearch(event.target.value)}}
+                            />
                         </div>
-                        <InputBase
-                            classes={{
-                                root: materialClassesAppBar.inputRoot,
-                                input: materialClassesAppBar.inputInput
-                            }}
-                            placeholder="Search…"
-                            value={search}
-                            onChange={(event)=>{setSearch(event.target.value)}}
-                        />
-                    </div>
-                </Toolbar>
-            </AppBar>
-            <Pokemones search={search}/>
+                    </Toolbar>
+                </AppBar>
+                <Switch>
+                    <Route from='/register'>
+                        <Register/>
+                    </Route>
+                    <Route from='/login'>
+                        <Login/>
+                    </Route>
+                    <Route from='/'>
+                        <Pokemones search={search}/>
+                    </Route>
+                </Switch>
+            </Router>
         </>
     );
 }

@@ -18,6 +18,44 @@ function Pokemones({search}) {
         localStorage.setItem('selectedTags', JSON.stringify([]))
     }
 
+    const onlyFavoritePokemones = () => {
+        let favPokemon
+        let xmlHttp = new XMLHttpRequest()
+        xmlHttp.open("GET", 'http://127.0.0.1:5000/my_favorite', false)
+        xmlHttp.setRequestHeader('Authorization', "Bearer "+JSON.parse(localStorage.getItem('accessToken')))
+        xmlHttp.send(null)
+
+        if (xmlHttp.status===200) {
+            favPokemon = JSON.parse(xmlHttp.responseText)
+        } else {
+            window.location.href = '/login'
+        }
+
+        let newPokemones = []
+
+        if (JSON.parse(localStorage.getItem('selectedTags')).length===0) {
+            for (let i = 0; i<favPokemon.length; i++) {
+                newPokemones.push(pokemones[favPokemon[i]-1])
+            }
+        } else {
+            isPreloaderRun(true)
+            for (let i = 0; i<pokemones.length; i++) {
+                let xmlHttp = new XMLHttpRequest()
+                xmlHttp.open("GET", 'https://pokeapi.co/api/v2/pokemon/' + pokemones[i].name, false)
+                xmlHttp.send(null)
+
+                let pokemonID = JSON.parse(xmlHttp.responseText).id
+
+                if (favPokemon.includes(pokemonID)) {
+                    newPokemones.push(pokemones[i])
+                }
+            }
+            isPreloaderRun(false)
+        }
+
+        setPokemones(newPokemones)
+    }
+
     // Функція відповідає за стан прелоадера, приймає або 1 або 0
     const isPreloaderRun = (preloaderRun) => {
         if (preloaderRun) {
@@ -68,7 +106,7 @@ function Pokemones({search}) {
 
     // Завантажуємо або всіх покемонів, або сортуючи по тегам
     // Кількість всіх покемонів 1118 штук
-    const loadPokemonesList = () => {
+    const loadPokemonesList = async () => {
         let selectedTagsFromCookies = localStorage.getItem('selectedTags')
 
         if (selectedTagsFromCookies===null) {
@@ -96,11 +134,10 @@ function Pokemones({search}) {
             setPokemones(filteredPokemonesByTags)
             setPagination(Math.ceil(filteredPokemonesByTags.length/paginationDelta))
         } else {
-            let xmlHttp = new XMLHttpRequest()
-            xmlHttp.open( "GET", 'https://pokeapi.co/api/v2/pokemon?limit=1118&offset=0', false ) // Обовязково синхронно
-            xmlHttp.send( null )
-            setPokemones(JSON.parse(xmlHttp.responseText).results)
-            setPagination(Math.ceil(Math.ceil(pokemones.length/paginationDelta)))
+            const response = await fetch('https://pokeapi.co/api/v2/pokemon?limit=1118&offset=0')
+            let json = await response.json()
+            await setPokemones(json.results)
+            await setPagination(Math.ceil(Math.ceil(pokemones.length/paginationDelta)))
         }
 
         isPreloaderRun(false)
@@ -151,6 +188,7 @@ function Pokemones({search}) {
                       alignItems="flex-start">
                     <Pagination defaultPage={1}
                                 count={Math.ceil(pokemones.length / paginationDelta)}
+                                page={currentPage}
                                 onChange={(event, page) => {setCurrentPage(page)}}/>
                 </Grid>}
             </Box>
@@ -176,12 +214,20 @@ function Pokemones({search}) {
                 <Grid container
                       direction="row"
                       justify="center"
+                      spacing={2}
                       alignItems="flex-start">
-                    <ButtonGroup color="secondary" aria-label="outlined secondary button group">
-                        <Button onClick={()=>{setPaginationDelta(10)}}>10</Button>
-                        <Button onClick={()=>{setPaginationDelta(20)}}>20</Button>
-                        <Button onClick={()=>{setPaginationDelta(50)}}>50</Button>
-                    </ButtonGroup>
+                    <Grid item>
+                        <ButtonGroup color="secondary" aria-label="outlined secondary button group">
+                            <Button onClick={()=>{setPaginationDelta(10); setCurrentPage(1)}}>10</Button>
+                            <Button onClick={()=>{setPaginationDelta(20); setCurrentPage(1)}}>20</Button>
+                            <Button onClick={()=>{setPaginationDelta(50); setCurrentPage(1)}}>50</Button>
+                        </ButtonGroup>
+                    </Grid>
+                    <Grid item>
+                        <ButtonGroup color="secondary" aria-label="outlined secondary button group">
+                            <Button onClick={()=>{onlyFavoritePokemones()}}>Favorite Pokemones</Button>
+                        </ButtonGroup>
+                    </Grid>
                 </Grid>}
             </Box>
 
