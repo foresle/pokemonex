@@ -23,7 +23,7 @@ const useMaterialStylesCard = makeStyles({
     },
 });
 
-function Pokemone({pkmn}) {
+function Pokemon({pkmn}) {
     const materialClassesCard = useMaterialStylesCard();
     const [cardIsHover, setCardIsHover] = useState(false)
     const [favPokemon, setFavPokemon] = useState([])
@@ -198,4 +198,4 @@ function Pokemone({pkmn}) {
     );
 }
 
-export default Pokemone
+export default Pokemon

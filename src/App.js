@@ -1,18 +1,17 @@
-import './App.css';
-import './preloader.css';
+import {useState} from "react";
+import {BrowserRouter as Router, Switch, Route, Link} from "react-router-dom";
+
 import {AppBar, Button, fade, makeStyles, Toolbar, Typography} from "@material-ui/core";
+
 import InputBase from '@material-ui/core/InputBase';
 import SearchIcon from '@material-ui/icons/Search';
-import Pokemones from "./Pokemones/Pokemones";
-import {useEffect, useState} from "react";
-import {
-    BrowserRouter as Router,
-    Switch,
-    Route,
-    Link
-} from "react-router-dom";
+
+import PokemonList from "./PokemonList";
 import Login from "./Login";
 import Register from "./Register";
+
+import './App.css';
+import './preloader.css';
 
 const useMaterialStylesAppBar = makeStyles((theme) => ({
     root: {
@@ -68,7 +67,6 @@ const useMaterialStylesAppBar = makeStyles((theme) => ({
 
 function App() {
     const materialClassesAppBar = useMaterialStylesAppBar();
-
     const [search, setSearch] = useState('')
 
     return (
@@ -76,7 +74,7 @@ function App() {
             <Router>
                 <AppBar color="primary" position="static" className={materialClassesAppBar.root}>
                     <Toolbar>
-                        <Typography variant="h6" noWrap className={materialClassesAppBar.title}>pokemonex</Typography>
+                        <Typography variant="h6" noWrap className={materialClassesAppBar.title}><Link to='/' style={{textDecoration: 'none', color: 'white'}}>pokemonex</Link></Typography>
                         <Button color="inherit"><Link to='/login' style={{textDecoration: 'none', color: 'white'}}>Login</Link></Button>
                         <Button color="inherit"><Link to='/register' style={{textDecoration: 'none', color: 'white'}}>Register</Link></Button>
                         <div className={materialClassesAppBar.search}>
@@ -95,6 +93,7 @@ function App() {
                         </div>
                     </Toolbar>
                 </AppBar>
+
                 <Switch>
                     <Route from='/register'>
                         <Register/>
@@ -103,12 +102,12 @@ function App() {
                         <Login/>
                     </Route>
                     <Route from='/'>
-                        <Pokemones search={search}/>
+                        <PokemonList searchQuery={search}/>
                     </Route>
                 </Switch>
             </Router>
         </>
-    );
+    )
 }
 
-export default App;
+export default App
