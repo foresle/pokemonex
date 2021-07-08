@@ -148,9 +148,9 @@ function PokemonList({searchQuery}) {
                     <Grid container justify="center">
                         <Grid item>
                             <ButtonGroup color="secondary" aria-label="outlined secondary button group">
-                                <Button onClick={()=>{setPaginationDelta(10); setCurrentPage(1)}}>10</Button>
-                                <Button onClick={()=>{setPaginationDelta(20); setCurrentPage(1)}}>20</Button>
-                                <Button onClick={()=>{setPaginationDelta(50); setCurrentPage(1)}}>50</Button>
+                                <Button variant={paginationDelta===10 ? "contained" : "outlined"} onClick={()=>{setPaginationDelta(10); setCurrentPage(1)}}>10</Button>
+                                <Button variant={paginationDelta===20 ? "contained" : "outlined"} onClick={()=>{setPaginationDelta(20); setCurrentPage(1)}}>20</Button>
+                                <Button variant={paginationDelta===50 ? "contained" : "outlined"} onClick={()=>{setPaginationDelta(50); setCurrentPage(1)}}>50</Button>
                                 <Button variant={onlyFavorite ? "contained" : "outlined"} onClick={()=>{selectedTags.length===0 ? setOnlyFavorite(! onlyFavorite) : alert('Спочатку відключіть всі теги')}}>Favorite Pokemon</Button>
                             </ButtonGroup>
                         </Grid>
@@ -189,7 +189,7 @@ function PokemonList({searchQuery}) {
                     {allTags.map((tag, index)=>{
                         return(
                             <Grid item>
-                                <Chip key={index} size={'medium'} label={tag.name} onClick={()=>{addSelectedTag(tag.name)}}/>
+                                <Chip key={index} size={'medium'} label={tag.name} onClick={()=>{addSelectedTag(tag.name); setOnlyFavorite(! onlyFavorite)}}/>
                             </Grid>
                         )
                     })}

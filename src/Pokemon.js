@@ -6,7 +6,7 @@ import {
     CardActionArea,
     CardActions,
     CardContent,
-    CardMedia,
+    CardMedia, Chip,
     Grid,
     makeStyles,
     Typography
@@ -121,6 +121,11 @@ function Pokemon({pokemonName, favoritePokemonList}) {
                             <Typography gutterBottom variant="h5" component="h2">
                                 {pokemon.name}
                             </Typography>
+                            <Grid container justify="flex-start" spacing={1}>
+                                {pokemon.types.map((type) => {
+                                    return (<Grid item><Chip size={'small'} color={'primary'} label={type.type.name}/></Grid>)
+                                })}
+                            </Grid>
                         </CardContent>
                     </CardActionArea>
                     <CardActions>
