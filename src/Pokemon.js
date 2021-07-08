@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from "react";
+
 import {
     Button,
     Card,
@@ -6,12 +7,12 @@ import {
     CardActions,
     CardContent,
     CardMedia,
-    Chip,
     Grid,
     makeStyles,
     Typography
 } from "@material-ui/core";
 import {Radar} from "react-chartjs-2";
+
 
 const useMaterialStylesCard = makeStyles({
     root: {
@@ -21,98 +22,61 @@ const useMaterialStylesCard = makeStyles({
     media: {
         height: 300,
     },
-});
+})
 
-function Pokemon({pkmn}) {
-    const materialClassesCard = useMaterialStylesCard();
-    const [cardIsHover, setCardIsHover] = useState(false)
-    const [favPokemon, setFavPokemon] = useState([])
 
-    const getFavoritePokemones = () => {
-        let xmlHttp = new XMLHttpRequest()
-        xmlHttp.open("GET", 'http://127.0.0.1:5000/my_favorite', false)
-        xmlHttp.setRequestHeader('Authorization', "Bearer "+JSON.parse(localStorage.getItem('accessToken')))
-        xmlHttp.send(null)
+function Pokemon({pokemonName, favoritePokemonList}) {
+    const materialClassesCard = useMaterialStylesCard()
+    const [card, setCard] = useState(<></>)
+    const [cardMediaIsImage, setCardMediaIsImage] = useState(true)
+    let [localFavoritePokemonList, setLocalFavoritePokemonList] = useState(favoritePokemonList)
 
-        if (xmlHttp.status===200) {
-            let json = JSON.parse(xmlHttp.responseText)
-            setFavPokemon(json)
+
+    const makeCard = async () => {
+        let responsePokemon = await fetch('https://pokeapi.co/api/v2/pokemon/'+pokemonName, {method: 'GET'})
+
+        if (responsePokemon.ok) {
+            return await responsePokemon.json()
         } else {
-            window.location.href = '/login'
+            alert('Вибачте виникла помилка')
         }
     }
 
-    useEffect(()=>{
-        getFavoritePokemones()
-    }, [])
 
-    const getCard = () => {
-        let xmlHttp = new XMLHttpRequest()
-        xmlHttp.open("GET", 'https://pokeapi.co/api/v2/pokemon/' + pkmn.name, false)
-        xmlHttp.send(null)
-
-        let pokemon = JSON.parse(xmlHttp.responseText)
-
-        let pokemonTypes = pokemon.types
-        let pokemonTypesStr = pokemonTypes.map((type) => {
-            return (<Grid item><Chip size={'small'} color={'primary'} label={type.type.name}/></Grid>)
+    const setFavorite = async (pokemonID) => {
+        const response = await fetch('http://127.0.0.1:5000/favorite/'+pokemonID, {
+            method: 'GET',
+            headers: {
+                'Authorization': "Bearer "+JSON.parse(localStorage.getItem('accessToken'))
+            }
         })
 
-        const setFavorite = async (pokemonID) => {
-            const response = await fetch('http://127.0.0.1:5000/favorite/'+pokemonID, {
-                method: 'GET',
-                headers: {
-                    'Authorization': "Bearer "+JSON.parse(localStorage.getItem('accessToken'))
-                }
-            })
-
-            if (! response.ok) {
-                window.location.href = '/login'
-            } else {
-                setFavPokemon([...favPokemon, pokemonID])
-            }
+        if (! response.ok) {
+            window.location.href = '/login'
+        } else {
+            setLocalFavoritePokemonList([...localFavoritePokemonList, pokemonID])
         }
-        
-        const setUnfavored = async (pokemonID) => {
-            const response = await fetch('http://127.0.0.1:5000/unfavored/'+pokemonID, {
-                method: 'GET',
-                headers: {
-                    'Authorization': "Bearer "+JSON.parse(localStorage.getItem('accessToken'))
-                }
-            })
+    }
 
-            if (! response.ok) {
-                window.location.href = '/login'
-            } else {
-                setFavPokemon(favPokemon.map((id) => {
-                    if (id!==pokemonID) {
-                        return id
-                    }
-                }))
+
+    const setUnfavored = async (pokemonID) => {
+        const response = await fetch('http://127.0.0.1:5000/unfavored/'+pokemonID, {
+            method: 'GET',
+            headers: {
+                'Authorization': "Bearer "+JSON.parse(localStorage.getItem('accessToken'))
             }
-        }
+        })
 
-        const cardButton = (pokemonID) => {
-            if (! favPokemon.includes(pokemonID)) {
-                return (
-                    <Button size="medium" onClick={() => {
-                        setFavorite(pokemonID)
-                    }} color="primary">
-                        Favorite
-                    </Button>
-                )
-            } else {
-                return (
-                    <Button size="medium" onClick={() => {
-                        setUnfavored(pokemonID)
-                    }} color="primary">
-                        Unfavored
-                    </Button>
-                )
-            }
+        if (! response.ok) {
+            window.location.href = '/login'
+        } else {
+            setLocalFavoritePokemonList(localFavoritePokemonList.filter((id) => {return (id!==pokemonID)}))
         }
+    }
 
-        if (cardIsHover) {
+
+    useEffect(() => {
+        makeCard().then((pokemon)=>{
             const chartData = {
                 labels: [
                     pokemon.stats[0].stat.name,
@@ -140,62 +104,51 @@ function Pokemon({pkmn}) {
                 }]
             }
 
-            return (
+
+            setCard(
                 <Card className={materialClassesCard.root}>
-                    <CardActionArea onClick={()=>{setCardIsHover(!cardIsHover)}}>
+                    <CardActionArea onClick={() => {setCardMediaIsImage(! cardMediaIsImage)}}>
+                        {cardMediaIsImage
+                        ?
+                        <CardMedia
+                            className={materialClassesCard.media}
+                            image={"https://pokeres.bastionbot.org/images/pokemon/" + pokemon.id + ".png"}
+                            title={pokemon.name}/>
+                        :
                         <Radar data={chartData} type="undefined" />
+                        }
                         <CardContent>
                             <Typography gutterBottom variant="h5" component="h2">
                                 {pokemon.name}
                             </Typography>
-                            <Typography variant="body2" color="textSecondary" component="p">
-                                <Grid container
-                                      justify="flex-start"
-                                      alignItems="baseline"
-                                      spacing={1}>
-                                    Type: {pokemonTypesStr}
-                                </Grid>
-                            </Typography>
-                        </CardContent>
-                    </CardActionArea>
-                </Card>
-            )
-        } else {
-            return (
-                <Card className={materialClassesCard.root}>
-                    <CardActionArea onClick={()=>{setCardIsHover(!cardIsHover)}}>
-                            <CardMedia
-                                className={materialClassesCard.media}
-                                image={"https://pokeres.bastionbot.org/images/pokemon/" + pokemon.id + ".png"}
-                                title={pokemon.name}
-                            />
-                        <CardContent onClick={()=>{setCardIsHover(!cardIsHover)}}>
-                            <Typography gutterBottom variant="h5" component="h2">
-                                {pkmn.name}
-                            </Typography>
-                            <Typography variant="body2" color="textSecondary" component="p">
-                                <Grid container
-                                      justify="flex-start"
-                                      alignItems="baseline"
-                                      spacing={1}>
-                                    Type: {pokemonTypesStr}
-                                </Grid>
-                            </Typography>
                         </CardContent>
                     </CardActionArea>
                     <CardActions>
-                        {cardButton(pokemon.id)}
+                        {localFavoritePokemonList.includes(pokemon.id)
+                        ?
+                        <Button size="medium" onClick={() => {
+                            setUnfavored(pokemon.id).then(r => {})
+                        }} color="primary">
+                            Unfavored
+                        </Button>
+                        :
+                        <Button size="medium" onClick={() => {
+                            setFavorite(pokemon.id).then(r => {})
+                        }} color="primary">
+                            Favorite
+                        </Button>
+                        }
                     </CardActions>
                 </Card>
             )
-        }
-    }
+        })
+    }, [cardMediaIsImage, pokemonName, localFavoritePokemonList])
 
-    return(
+    return (
         <Grid item>
-            {getCard()}
+            {card}
         </Grid>
-    );
+    )
 }
 
 export default Pokemon

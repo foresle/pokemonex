@@ -12,6 +12,7 @@ function PokemonList({searchQuery}) {
     let [currentPage, setCurrentPage] = useState(1)
     let [onlyFavorite, setOnlyFavorite] = useState(0)
     let [allTags, setAllTags] = useState([])
+    let [favoritePokemonListFromToken, setFavoritePokemonListFromToken] = useState([])
 
 
     const makePokemonList = async () => {
@@ -36,21 +37,11 @@ function PokemonList({searchQuery}) {
 
             // Якщо треба то сортуємо улюбленних покемоннів
             if (onlyFavorite) {
-                const userFavoritePokemonListResponse = await fetch('http://127.0.0.1:5000/my_favorite', {
-                    method: 'GET', headers: {'Authorization': "Bearer "+JSON.parse(localStorage.getItem('accessToken'))}})
-
-                if (userFavoritePokemonListResponse.ok) {
-                    let userFavoritePokemonList = await userFavoritePokemonListResponse.json()
-
-                    for (let index = 0; index<userFavoritePokemonList.length; index++) {
-                        favoritePokemonList.push(newPokemonList[userFavoritePokemonList[index]-1])
-                    }
-                } else {
-                    alert('Будь-ласка авторизуйтесь спочатку')
-                    window.location.href = '/login'
+                for (let index = 0; index<favoritePokemonListFromToken.length; index++) {
+                    favoritePokemonList.push(newPokemonList[favoritePokemonListFromToken[index]-1])
                 }
 
-            newPokemonList = favoritePokemonList
+                newPokemonList = favoritePokemonList
             }
 
         } else {
@@ -72,7 +63,7 @@ function PokemonList({searchQuery}) {
 
         // Якщо є пошуковий запис то сортуємо
         if (searchQuery !== '') {
-            let searchPokemonList = newPokemonList.filter((pokemon) => {return(pokemon.name.slice(0, searchQuery.length) === searchQuery)})
+            let searchPokemonList = newPokemonList.filter((pokemon) => {return (pokemon.name.slice(0, searchQuery.length) === searchQuery)})
 
             newPokemonList = searchPokemonList
         }
@@ -109,19 +100,37 @@ function PokemonList({searchQuery}) {
         }
     }
 
+
     const removeSelectedTag = (tagName) => {
         let newSelectedTags = selectedTags.filter((tag)=>{return(tag!==tagName)})
         localStorage.setItem('selectedTags', JSON.stringify(newSelectedTags))
         setSelectedTags(newSelectedTags)
     }
 
-    useEffect(()=>{
-        makePokemonList().then(r => {})
-        loadAllTags().then(r=>{})
+
+    const loadFavoritePokemonListFromToken = async () => {
+        const userFavoritePokemonListResponse = await fetch('http://127.0.0.1:5000/my_favorite', {
+            method: 'GET', headers: {'Authorization': "Bearer "+JSON.parse(localStorage.getItem('accessToken'))}})
+
+        if (userFavoritePokemonListResponse.ok) {
+            let userFavoritePokemonList = await userFavoritePokemonListResponse.json()
+
+            setFavoritePokemonListFromToken(userFavoritePokemonList)
+        } else {
+            alert('Будь-ласка авторизуйтесь спочатку')
+            window.location.href = '/login'
+        }
+    }
+
+
+    useEffect( async ()=>{
+        await loadFavoritePokemonListFromToken()
+        await makePokemonList()
+        await loadAllTags()
     }, [searchQuery, selectedTags, paginationDelta, currentPage, onlyFavorite])
 
 
-    return(
+    return (
         <>
             <Box id="topMenu" m={4}>
                 <Box m={2}>
@@ -165,7 +174,9 @@ function PokemonList({searchQuery}) {
                 <Grid container justify="space-evenly" spacing={2}>
                     {pokemonList.length !== 0
                         ?
-                        pokemonList.map((pokemon, index)=>{ return <Pokemon key={index} pkmn={pokemon}/> })
+                        pokemonList.map((pokemon, index)=>{
+                            return (<Pokemon key={index} pokemonName={pokemon.name} favoritePokemonList={favoritePokemonListFromToken} />)
+                        })
                         :
                         <>Not Found</>
                     }
