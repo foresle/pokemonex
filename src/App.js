@@ -10,9 +10,6 @@ import PokemonList from "./PokemonList";
 import Login from "./Login";
 import Register from "./Register";
 
-import './App.css';
-import './preloader.css';
-
 const useMaterialStylesAppBar = makeStyles((theme) => ({
     root: {
         flexGrow: 1,

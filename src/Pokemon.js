@@ -122,8 +122,8 @@ function Pokemon({pokemonName, favoritePokemonList}) {
                                 {pokemon.name}
                             </Typography>
                             <Grid container justify="flex-start" spacing={1}>
-                                {pokemon.types.map((type) => {
-                                    return (<Grid item><Chip size={'small'} color={'primary'} label={type.type.name}/></Grid>)
+                                {pokemon.types.map((type, index) => {
+                                    return (<Grid item><Chip key={index} size={'small'} color={'primary'} label={type.type.name}/></Grid>)
                                 })}
                             </Grid>
                         </CardContent>

@@ -1,4 +1,3 @@
-import array
 import json
 from datetime import timedelta
 from flask_bcrypt import Bcrypt
@@ -116,4 +115,4 @@ def shutdown_session(exception=None):
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run('0.0.0.0:5000', debug=True)
